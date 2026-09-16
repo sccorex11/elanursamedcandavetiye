@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ela Nur & Samed Can - Düğün Davetiyesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #141414;
+            --text-color: #f0f0f0;
+            --text-muted: #aaaaaa;
+            --accent-color: #e0e0e0;
+            --border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Zarf / Açılış Ekranı */
+        #envelope-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background: #1a1a1a;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s ease;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 115px solid #222;
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out;
+            z-index: 3;
+        }
+
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-seal {
+            position: absolute;
+            z-index: 4;
+            width: 60px;
+            height: 60px;
+            background: #111;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .envelope-container.open .envelope-seal {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .envelope-message {
+            position: absolute;
+            bottom: 25px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Ana İçerik */
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Müzik Kontrol Butonu */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(20,20,20,0.8);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: background 0.3s;
+        }
+        .music-control:hover {
+            background: rgba(40,40,40,0.9);
+        }
+
+        /* Başlık ve Logo */
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .es-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--card-bg);
+        }
+
+        .names {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .divider-floral {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin: 15px 0;
+        }
+
+        .quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+        }
+
+        /* Fotoğraf Alanı */
+        .photo-container {
+            width: 100%;
+            max-height: 450px;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+        }
+        .photo-container img:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Geri Sayım */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .countdown-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px 10px;
+            min-width: 75px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .countdown-number {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .countdown-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* Etkinlik Kartları */
+        .events-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .event-title {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .event-date-time {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .event-address {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .map-btn {
+            display: inline-block;
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 10px 25px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .map-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Ortak Gelin Alma Notu */
+        .gelin-alma-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border-color);
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        /* Aile Bilgileri */
+        .families-section {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 40px 0;
+            padding: 25px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .family-group h4 {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .family-group p {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .events-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Zarf Açılış Ekranı -->
+    <div id="envelope-overlay" onclick="openEnvelope()">
+        <div class="envelope-container" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-seal">ES</div>
+            <div class="envelope-message">DAVETİYEYİ AÇMAK İÇİN TIKLAYINIZ</div>
+        </div>
+    </div>
+
+    <!-- Müzik Çalar (Nazende Sevgilim) -->
+    <div class="music-control" id="musicToggle" onclick="toggleMusic()" title="Mziği Aç/Kapat" style="display:none;">
+        <i class="fa-solid fa-music" id="musicIcon"></i>
+    </div>
+    <!-- Örnek telifsiz/enstrümantal veya standart ses kaynağı (Nazende Sevgilim enstrümantal linki eklenebilir) -->
+    <audio id="bgMusic" loop>
+        <source src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- Ana İçerik -->
+    <div id="main-content">
+        
+        <div class="header-section">
+            <div class="es-logo">E & S</div>
+            <div class="divider-floral"><i class="fa-solid fa-leaf"></i> ✤ <i class="fa-solid fa-leaf"></i></div>
+            <h1 class="names">Ela Nur & Samed</h1>
+            <p class="quote">"Bu mutlu günümüzde bizi yalnız bırakmamanız en özel anımız olacaktır."</p>
+        </div>
+
+        <!-- İlk Fotoğraf -->
+        <div class="photo-container">
+            <img src="image_ae6862.jpg" alt="Ela Nur ve Samed">
+        </div>
+
+        <!-- Geri Sayım (Düğün Tarihine: 11 Ekim 2026 18:45) -->
+        <div class="countdown-container" id="countdown">
+            <div class="countdown-box">
+                <span class="countdown-number" id="days">00</span>
+                <span class="countdown-label">Gün</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="hours">00</span>
+                <span class="countdown-label">Saat</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="minutes">00</span>
+                <span class="countdown-label">Dakika</span>
+            </div>
+            <div class="countdown-box">
+                <span class="countdown-number" id="seconds">00</span>
+                <span class="countdown-label">Saniye</span>
+            </div>
+        </div>
+
+        <!-- Kına ve Düğün Bilgileri -->
+        <div class="events-grid">
+            <!-- Kına Kartı -->
+            <div class="event-card">
+                <h3 class="event-title">KINA</h3>
+                <div class="event-date-time"><i class="fa-regular fa-calendar"></i> 09.10.2026</div>
+                <div class="event-address">
+                    <strong>Miss Vella Düğün Salonu</strong><br>
+                    Çakır, 03030 Afyonkarahisar Merkez / Afyon
+                </div>
+                <a href="https://maps.google.com/?q=Miss+Vella+Dugun+Salonu+Afyonkarahisar" target="_blank" class="map-btn">
+                    <i class="fa-solid fa-location-dot"></i> Konum / QR
+                </a>
+            </div>
+
+            <!-- Düğün Kartı -->
+            <div class="event-card">
+                <h3 class="event-title">DÜĞÜN</h3>
+                <div class="event-date-time"><i class="fa-regular fa-calendar"></i> 11.10.2026 | 18:45 - 22:00</div>
+                <div class="event-address">
+                    <strong>Göksu Düğün Salonu</strong><br>
+                    Göksu, 06820 Etimesgut / Ankara
+                </div>
+                <a href="https://maps.google.com/?q=Goksu+Dugun+Salonu+Etimesgut+Ankara" target="_blank" class="map-btn">
+                    <i class="fa-solid fa-location-dot"></i> Konum / QR
+                </a>
+            </div>
+        </div>
+
+        <!-- Ortak Gelin Alma Notu -->
+        <div class="gelin-alma-box">
+            <i class="fa-solid fa-heart"></i> Gelin alma 10 Ekim Cumartesi yapılacaktır.
+        </div>
+
+        <!-- İkinci Fotoğraf -->
+        <div class="photo-container">
+            <img src="image_ae687d.jpg" alt="Ela Nur ve Samed Dış Çekim">
+        </div>
+
+        <!-- Aile Bilgileri -->
+        <div class="families-section">
+            <div class="family-group">
+                <h4>DAMAT ANNE & BABA</h4>
+                <p>Mustafa & Sevgi CAN</p>
+            </div>
+            <div class="family-group">
+                <h4>GELİN ANNE & BABA</h4>
+                <p>Özgür & Gülşen KUMRAL</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Elanur & Samed Can Davetiye
+        </div>
+
+    </div>
+
+    <!-- Zarf Açılış ve Müzik Scripti -->
+    <script>
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const overlay = document.getElementById('envelope-overlay');
+            const mainContent = document.getElementById('main-content');
+            const musicToggle = document.getElementById('musicToggle');
+            const bgMusic = document.getElementById('bgMusic');
+
+            envelope.classList.add('open');
+
+            // Müziği başlatmayı dene (Tarayıcı politikaları gereği tıklama anında başlar)
+            bgMusic.play().catch(e => console.log("Müzik otomatik oynatılamadı:", e));
+            musicToggle.style.display = 'flex';
+
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+                mainContent.classList.add('visible');
+            }, 800);
+        }
+
+        function toggleMusic() {
+            const bgMusic = document.getElementById('bgMusic');
+            const musicIcon = document.getElementById('musicIcon');
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicIcon.className = "fa-solid fa-music";
+            } else {
+                bgMusic.pause();
+                musicIcon.className = "fa-solid fa-volume-xmark";
+            }
+        }
+
+        // Düğün Geri Sayım Sayacı (11 Ekim 2026 18:45:00)
+        const weddingDate = new Date("October 11, 2026 18:45:00").getTime();
+
+        const countdownTimer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById("countdown").innerHTML = "<div style='font-family:Cinzel,serif; font-size:18px;'>Mutlu Günümüz Gerçekleşti!</div>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }, 1000);
+    </script>
+</body>
+</html>
