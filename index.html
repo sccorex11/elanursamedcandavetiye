@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Elanur & Samed Can Davetiye</title>
+<style>
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0d0d0d;
+        font-family: 'Playfair Display', serif;
+    }
+    iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+    /* Müzik Çalar ve Görsel Güvencesi için Gizli Alan */
+    .hidden-assets {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+    <!-- Arka Plan Müziği (Nazende Sevgilim - 10. Saniye Başlangıçlı) -->
+    <audio id="bg-music" autoplay loop>
+        <source src="https://www.youtube.com/watch?v=bQIszT38_eA" type="audio/mp3">
+    </audio>
+
+    <!-- Senin Orijinal Davetiyen -->
+    <iframe src="https://elanurcan-bcncyhiz.manus.space/" title="Elanur & Samed Can Davetiye" allow="autoplay; fullscreen"></iframe>
+
+    <!-- Fotoğrafların GitHub'da Eşleşmesi İçin Gizli Referans Alanı -->
+    <div class="hidden-assets">
+        <img src="image_ae6862.jpg" alt="Fotoğraf 1">
+        <img src="image_ae687d.jpg" alt="Fotoğraf 2">
+    </div>
+
+    <script>
+        // Müziğin 10. saniyeden başlamasını sağlayan güvenlik betiği
+        document.addEventListener("DOMContentLoaded", function() {
+            const music = document.getElementById('bg-music');
+            if (music) {
+                music.currentTime = 10;
+                music.play().catch(e => console.log("Otomatik oynatma tarayıcı tarafından engellendi:", e));
+            }
+        });
+    </script>
+</body>
+</html>
